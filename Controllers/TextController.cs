@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace demoapi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class TextController : ControllerBase
     {
         private readonly ILogger<TextController> _logger;
@@ -20,18 +19,12 @@ namespace demoapi.Controllers
         {
             if (string.IsNullOrEmpty(text))
             {
-                return BadRequest("Text query parameter is required.");
+                return BadRequest("Text cannot be null or empty.");
             }
-
-            _logger.LogInformation("Input text for reverse: {Text}", text);
 
             char[] charArray = text.ToCharArray();
             Array.Reverse(charArray);
-            string reversedText = new string(charArray);
-
-            _logger.LogInformation("Output text for reverse: {ReversedText}", reversedText);
-
-            return Ok(reversedText);
+            return Ok(new string(charArray));
         }
 
         [HttpGet("disemvowel")]
@@ -39,16 +32,11 @@ namespace demoapi.Controllers
         {
             if (string.IsNullOrEmpty(text))
             {
-                return BadRequest("Text query parameter is required.");
+                return BadRequest("Text cannot be null or empty.");
             }
 
-            _logger.LogInformation("Input text for disemvowel: {Text}", text);
-
-            string result = new string(text.Where(c => !"aeiouAEIOU".Contains(c)).ToArray());
-
-            _logger.LogInformation("Output text for disemvowel: {Result}", result);
-
-            return Ok(result);
+            string disemvoweledText = new string(text.Where(c => !"aeiouAEIOU".Contains(c)).ToArray());
+            return Ok(disemvoweledText);
         }
     }
 }
